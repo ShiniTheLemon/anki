@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.anki.files.mapper.AdminMapper">
+
+	<select id="login" resultType="com.anki.files.pojo.Admin">
+		select
+		id,password
+		from admin
+		where email=#{email}
+	</select>
+	
+	<select id="showAllUsers" resultType="com.anki.files.pojo.Users"> 
+		select
+			user_name,
+			email
+		from users
+	</select>
+	<select id="inbox" resultType="com.anki.files.pojo.Qa">
+		select
+			id,
+			questions,
+			answers
+		from qa
+			
+	</select>
+	
+	<update id="feedBack">
+		update 
+			qa
+		<set>
+		 admin_id=#{admin_id},
+		 answers=#{answers}
+		</set>
+		where id=#{id} 
+	</update>
+	
+</mapper>

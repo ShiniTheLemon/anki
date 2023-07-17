@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.anki.files.mapper.UsersMapper">
+
+	<select id="login" resultType="com.anki.files.pojo.Users">
+		select
+		id,user_name,password,verification
+		from users where email=#{email}
+		
+	</select>
+	
+	<insert id="signUp">
+		insert into users
+		(user_name,email,password,verification)values
+		(#{user.user_name},#{user.email},#{user.password},#{user.verification})
+	</insert>
+	
+	<insert id="createDeck">
+		insert into decks
+		(user_id,word,meaning,deck_name) values
+		(#{user_id},#{word},#{meaning},#{deck_name})
+	</insert>
+	
+	<insert id="help">
+		insert into qa
+		(user_id,questions) values
+		(#{help.user_id},#{help.questions})
+	</insert>
+
+	
+	  	<select id="selectForVertify" resultType="com.anki.files.pojo.Users">
+  		
+  		select
+  			email,
+  			verification
+  		from users
+  		where email=#{email} and verification=#{verification}
+  		
+  	</select>
+  	<select id="deckName" resultType="com.anki.files.pojo.decks">
+  		select
+  		distinct
+  			deck_name
+  		from decks 
+  		where user_id=#{user_id}
+  	</select>
+  	<select id="showDecks" resultType="com.anki.files.pojo.decks" >
+  		select
+  			id,word,meaning,deck_name,state
+  		from decks
+  		where user_id=#{user_id}
+  	</select>
+  	<select id="results" resultType="com.anki.files.pojo.decks" >
+  		select
+  			word, meaning,deck_name
+  		from decks
+  		where user_id=#{deck.user_id} and state=1
+  	</select>
+  	<select id="searchDecks" resultType="com.anki.files.pojo.decks" >
+  		select
+  			word,meaning,id
+  		from decks
+  		where user_id=#{user_id} and deck_name=#{deck_name}
+  	</select>
+  	<select id="randomTestQuestion" resultType="com.anki.files.pojo.decks">
+  		select 
+  			id,
+  			word,
+  			meaning,
+  			state
+  		from decks 
+  		where id=#{id} 
+  	</select>
+  	<select id="RandomIdSelector" resultType="com.anki.files.pojo.decks">
+  		select
+  			id
+  		from decks 
+  		where user_id=#{user_id} and deck_name=#{deck_name}
+  	</select>
+  	<select id="difficultTest" resultType="com.anki.files.pojo.decks">
+  		select
+  			id
+  		from decks 
+  		where user_id=#{user_id} and deck_name=#{deck_name}
+  			and state=#{state}
+  	
+  	</select>
+  	<select id="feedBack" resultType="com.anki.files.pojo.Qa" >
+  		select
+  			questions,
+  			answers,
+  			id
+  		from Qa where user_id=#{user_id}
+  	</select>
+  	<select id="rowId" resultType="com.anki.files.pojo.Qa"  >
+  		select id
+  			from qa
+  		where user_id=#{user_id} and questions=#{questions}
+  	</select>
+  	
+    
+    <update id="updatePassword">
+  		Update users
+  			<set>
+  				password = #{user.password}
+  			</set>
+  		where email = #{user.email}
+  	
+  	</update>
+  	<update id="editDeck">
+  		update decks
+  		<set>
+  			<if test="deck.word != null">
+  				word=#{deck.word},
+  			</if>
+  			<if test="deck.meaning != null">
+  				meaning=#{deck.meaning}
+  			</if>
+  		</set>
+  		where user_id=#{deck.user_id} and deck_name=#{deck.deck_name}
+  			and id=#{deck.id}
+  			
+  		
+  	</update>
+  	<update id="answerHandler">
+  		update decks
+  		   	<set>
+  		   		state=#{state}
+  		   	</set>
+  		where id=#{id}
+  	</update>
+  	
+  	<delete id="removeDeck">
+  		delete  from decks where user_id=#{user_id}
+  		and deck_name=#{deck_name}
+  	</delete>
+  	
+</mapper>
